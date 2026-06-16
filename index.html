@@ -209,62 +209,60 @@
             font-size: 0.7rem;
         }
 
+        /* タブレット・スマホ縦 */
         @media (max-width: 768px) {
             .top-container { padding: 0 12px 10px; }
-            .top-title { font-size: 1.6rem; gap: 8px; }
-            .top-title__icon { width: 36px; height: 36px; }
-            .mode-cards { grid-template-columns: 1fr; gap: 8px; }
-            .mode-card { padding: 14px 12px; gap: 6px; }
-            .mode-card__icon { font-size: 1.6rem; margin-bottom: 0; }
-            .mode-card__title { font-size: 0.95rem; }
-            .mode-card__desc { font-size: 0.75rem; }
-            .mode-card__btn { font-size: 0.72rem; padding: 6px 14px; margin-top: 4px; }
-            .top-subtitle { font-size: 0.8rem; }
-            .top-title-area { margin-bottom: 10px; }
-        }
-
-        @media (max-width: 480px) {
-            .top-container { padding: 0 10px 8px; }
-            .top-title { font-size: 1.3rem; gap: 6px; }
-            .top-title__icon { width: 28px; height: 28px; }
-            .mode-card { padding: 12px 10px; gap: 4px; }
-            .mode-card__icon { font-size: 1.3rem; }
+            .top-title { font-size: 1.4rem; gap: 8px; }
+            .top-title__icon { width: 32px; height: 32px; }
+            .mode-cards { grid-template-columns: 1fr; gap: 6px; }
+            .mode-card { padding: 10px 12px; gap: 4px; flex-direction: row; align-items: center; }
+            .mode-card__icon { font-size: 1.4rem; margin-bottom: 0; }
             .mode-card__title { font-size: 0.85rem; }
-            .mode-card__desc { font-size: 0.68rem; }
-            .mode-card__btn { font-size: 0.65rem; padding: 5px 12px; }
-            .top-subtitle { font-size: 0.7rem; }
+            .mode-card__desc { display: none; }
+            .mode-card__btn { display: none; }
+            .top-subtitle { font-size: 0.75rem; }
+            .top-title-area { margin-bottom: 8px; }
         }
 
-        @media (max-height: 700px) {
-            .top-title { font-size: 2.4rem; }
-            .mode-card { padding: 20px 16px; }
-            .mode-card__icon { font-size: 2rem; }
-            .mode-card__title { font-size: 1.1rem; }
-        }
-
-        /* iPhone横画面: 高さが小さいのでカードを極小に */
-        @media (max-height: 500px) and (orientation: landscape) {
+        /* iPhone縦画面 (portrait) */
+        @media (max-width: 480px) and (orientation: portrait) {
             .top-container { padding: 0 10px 6px; }
-            .top-title { font-size: 1.2rem; gap: 6px; margin-bottom: 4px; }
-            .top-title__icon { width: 24px; height: 24px; }
-            .top-title-area { margin-bottom: 6px; }
+            .top-title { font-size: 1.2rem; gap: 6px; }
+            .top-title__icon { width: 26px; height: 26px; }
+            .mode-cards { gap: 5px; }
+            .mode-card { padding: 10px 12px; }
+            .mode-card__icon { font-size: 1.2rem; }
+            .mode-card__title { font-size: 0.8rem; }
             .top-subtitle { font-size: 0.65rem; }
-            .mode-cards { gap: 6px; grid-template-columns: repeat(3, 1fr); }
-            .mode-card { padding: 8px 6px; gap: 2px; }
-            .mode-card__icon { font-size: 1.1rem; margin-bottom: 0; }
-            .mode-card__title { font-size: 0.7rem; }
-            .mode-card__desc { font-size: 0.55rem; }
-            .mode-card__btn { font-size: 0.55rem; padding: 4px 8px; margin-top: 2px; }
-            .top-footer { font-size: 0.5rem; }
+            .top-title-area { margin-bottom: 6px; }
+            .top-footer { font-size: 0.55rem; }
+        }
+
+        /* iPhone横画面 (landscape) */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .top-container { padding: 0 16px 4px; justify-content: center; }
+            .top-title { font-size: 1.1rem; gap: 6px; margin-bottom: 2px; }
+            .top-title__icon { width: 22px; height: 22px; }
+            .top-title-area { margin-bottom: 4px; }
+            .top-subtitle { font-size: 0.6rem; }
+            .mode-cards { gap: 5px; grid-template-columns: repeat(3, 1fr); }
+            .mode-card { padding: 8px 8px; gap: 3px; }
+            .mode-card__icon { font-size: 1rem; margin-bottom: 0; }
+            .mode-card__title { font-size: 0.65rem; }
+            .mode-card__desc { display: none; }
+            .mode-card__btn { display: none; }
+            .top-footer { font-size: 0.45rem; }
+            .top-quick-actions { display: none; }
         }
     </style>
 </head>
-<body>
 <body>
     <div class="top-bg"></div>
 
     <div class="top-container">
         <div class="top-title-area">
+            <h1 class="top-title">
+                <img src="../images/special/title-icon.webp" alt="RSU Compass" class="top-title__icon">
             <h1 class="top-title">
                 <img src="../images/special/title-icon.webp" alt="RSU Compass" class="top-title__icon">
                 <span  data-i18n="top.title">RSU Compass</span>

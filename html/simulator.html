@@ -1,0 +1,654 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📊 シミュレーションツール | RSU学習ゲーム</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(180deg, #0a0f28 0%, #1a1a3e 50%, #0f1a3a 100%);
+            min-height: 100vh;
+            font-family: 'Noto Sans JP', 'Segoe UI', 'Hiragino Sans', 'Meiryo', sans-serif;
+            color: #fff;
+        }
+
+        .sim-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px 30px;
+        }
+
+        /* パンくずリスト */
+        .breadcrumb {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+            font-size: 0.85rem;
+        }
+        .breadcrumb a {
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .breadcrumb a:hover {
+            color: rgba(180, 200, 255, 0.9);
+        }
+        .breadcrumb__sep {
+            color: rgba(255, 255, 255, 0.3);
+        }
+        .breadcrumb__current {
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 600;
+        }
+
+        .sim-header {
+            text-align: center;
+            margin-bottom: 16px;
+            padding: 24px;
+        }
+
+        .sim-header h1 {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 12px rgba(0,0,0,0.3);
+        }
+
+        .sim-header p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1rem;
+        }
+
+        /* Simulation Cards */
+        /* Simulation Cards */
+        .sim-card {
+            background: rgba(20, 30, 60, 0.6);
+            backdrop-filter: blur(16px);
+            background: rgba(20, 30, 60, 0.6);
+            backdrop-filter: blur(16px);
+            border-radius: 14px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: box-shadow 0.3s, border-color 0.3s, transform 0.3s;
+        }
+
+        .sim-card:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            border-color: rgba(150, 180, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .sim-card-header {
+            padding: 18px 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            user-select: none;
+            transition: background 0.2s;
+            color: #fff;
+            text-align: center;
+        }
+
+        .sim-card-header:hover {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .sim-card-header .card-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-align: left;
+        }
+
+        .sim-card-header .card-icon {
+            font-size: 1.8em;
+        }
+
+        .sim-card-header .card-text h3 {
+            margin: 0;
+            font-size: 1.1em;
+            color: #fff;
+        }
+
+        .sim-card-header .card-text p {
+            margin: 4px 0 0 0;
+            font-size: 0.85em;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .sim-card-header .arrow {
+            font-size: 1.2em;
+            transition: transform 0.3s;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .sim-card.active .sim-card-header .arrow {
+            transform: rotate(180deg);
+        }
+
+        .sim-card-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s ease;
+            padding: 0 24px;
+        }
+
+        .sim-card.active .sim-card-body {
+            max-height: 1200px;
+            padding: 0 24px 24px 24px;
+        }
+
+        /* Form Styles */
+        .sim-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 0.85em;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 6px;
+        }
+
+        .form-group input {
+            padding: 10px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.15); background: rgba(255, 255, 255, 0.06); color: #fff;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: rgba(150, 180, 255, 0.5);
+        }
+
+        .calc-btn {
+            grid-column: 1 / -1;
+            padding: 14px;
+            background: rgba(40, 60, 120, 0.7);
+            color: #fff;
+            border: 1px solid rgba(150, 180, 255, 0.3);
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s, background 0.3s;
+        }
+
+        .calc-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(40, 60, 120, 0.4);
+            background: rgba(50, 75, 140, 0.8);
+        }
+
+        .calc-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Results Table */
+        .result-section {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .result-section.show {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .result-table th {
+            background: rgba(20, 30, 60, 0.8);
+            color: #fff;
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 0.85em;
+        }
+
+        .result-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 0.95em;
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .result-table tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .result-table .amount {
+            text-align: right;
+            font-family: 'Courier New', monospace;
+            font-weight: 600;
+        }
+
+        .result-table .highlight {
+            background: rgba(74, 222, 128, 0.1);
+            font-weight: 700;
+            color: #6ee7b7;
+        }
+
+        .result-table .tax-row {
+            color: #ff8a80;
+        }
+
+        .notice {
+            margin-top: 16px;
+            padding: 12px 16px;
+            background: rgba(255, 153, 0, 0.1);
+            border-left: 4px solid rgba(255, 153, 0, 0.6);
+            border-radius: 4px;
+            font-size: 0.85em;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .notice::before {
+            content: "⚠️ ";
+        }
+
+        /* Coming Soon */
+        .coming-soon {
+            text-align: center;
+            padding: 40px 20px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .coming-soon .icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .coming-soon p {
+            font-size: 1em;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            font-size: 0.7em;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .status-active {
+            background: rgba(74, 222, 128, 0.2);
+            color: #6ee7b7;
+        }
+
+        .status-coming {
+        .status-coming {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.4);
+        }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .sim-form {
+                grid-template-columns: 1fr;
+            }
+
+            .sim-header h1 {
+                font-size: 1.6em;
+            }
+
+            .back-link {
+                position: static;
+                display: inline-block;
+                margin-top: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sim-container">
+        <!-- パンくずリスト -->
+        <nav class="breadcrumb">
+            <a href="index.html" data-i18n="sim.breadcrumb.top">トップ</a>
+            <span class="breadcrumb__sep">＞</span>
+            <span class="breadcrumb__current" data-i18n="sim.breadcrumb.current">シミュレーション</span>
+        </nav>
+
+        <!-- Header -->
+        <div class="sim-header">
+            <h1 data-i18n="sim.title">📊 シミュレーションツール</h1>
+            <p data-i18n="sim.subtitle">実際の数字で計算してみよう — RSUの損益・手取りを体感</p>
+        </div>
+
+        </div>
+
+        <!-- S1: Vest計算機 -->
+        <div class="sim-card active" id="sim-vest">
+            <div class="sim-card-header" onclick="toggleCard('sim-vest')">
+                <div class="card-title">
+                    <span class="card-icon">💹</span>
+                    <div class="card-text">
+                        <h3>Vest計算機 <span class="status-badge status-active">利用可能</span></h3>
+                        <p>株数 × 株価 × TTM ＝ 円換算額、源泉徴収額を即座に計算</p>
+                    </div>
+                </div>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="sim-card-body">
+                <div class="sim-form">
+                    <div class="form-group">
+                        <label>📦 Vest株数</label>
+                        <input type="number" id="vest-shares" placeholder="例: 10" min="1" value="">
+                    </div>
+                    <div class="form-group">
+                        <label>💵 株価 (USD)</label>
+                        <input type="number" id="vest-price" placeholder="例: 185.50" step="0.01" min="0" value="">
+                    </div>
+                    <div class="form-group">
+                        <label>💱 TTMレート (円/USD)</label>
+                        <input type="number" id="vest-ttm" placeholder="例: 155" step="0.01" value="155">
+                    </div>
+                    <div class="form-group">
+                        <label>💰 その他の年収 (万円)</label>
+                        <input type="number" id="vest-other-income" placeholder="例: 800" step="1" value="">
+                    </div>
+                    <button class="calc-btn" onclick="calcVest()">🧮 計算する</button>
+                </div>
+
+                <div class="result-section" id="vest-result">
+                    <table class="result-table">
+                        <thead>
+                            <tr>
+                                <th>項目</th>
+                                <th style="text-align:right">金額</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vest-result-body">
+                        </tbody>
+                    </table>
+                    <div class="notice">
+                        これは概算です。正確な金額は給与明細を確認してください。累進税率は簡易計算（基礎控除48万円適用）で、復興特別所得税（2.1%）を含みます。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- S2: 売却損益計算 -->
+        <div class="sim-card" id="sim-sell">
+            <div class="sim-card-header" onclick="toggleCard('sim-sell')">
+                <div class="card-title">
+                    <span class="card-icon">📈</span>
+                    <div class="card-text">
+                        <h3>売却損益計算 <span class="status-badge status-coming">準備中</span></h3>
+                        <p>取得価額 vs 売却価額、為替差損益を計算</p>
+                    </div>
+                </div>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="sim-card-body">
+                <div class="coming-soon">
+                    <div class="icon">🚧</div>
+                    <p>近日公開予定<br><small>売却時の譲渡所得・為替差損益を自動計算</small></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- S3: 確定申告プレビュー -->
+        <div class="sim-card" id="sim-tax-return">
+            <div class="sim-card-header" onclick="toggleCard('sim-tax-return')">
+                <div class="card-title">
+                    <span class="card-icon">📝</span>
+                    <div class="card-text">
+                        <h3>確定申告プレビュー <span class="status-badge status-coming">準備中</span></h3>
+                        <p>入力内容から申告書イメージを生成</p>
+                    </div>
+                </div>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="sim-card-body">
+                <div class="coming-soon">
+                    <div class="icon">🚧</div>
+                    <p>近日公開予定<br><small>確定申告書の各欄にどの数字が入るかをプレビュー</small></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- S4: 即売り vs 保有 比較 -->
+        <div class="sim-card" id="sim-compare">
+            <div class="sim-card-header" onclick="toggleCard('sim-compare')">
+                <div class="card-title">
+                    <span class="card-icon">⚖️</span>
+                    <div class="card-text">
+                        <h3>即売り vs 保有 比較 <span class="status-badge status-coming">準備中</span></h3>
+                        <p>税率・リスクを比較して最適な戦略を検討</p>
+                    </div>
+                </div>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="sim-card-body">
+                <div class="coming-soon">
+                    <div class="icon">🚧</div>
+                    <p>近日公開予定<br><small>即売りの確実性 vs 保有の成長可能性を数値比較</small></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- S5: 外国税額控除計算 -->
+        <div class="sim-card" id="sim-foreign-tax">
+            <div class="sim-card-header" onclick="toggleCard('sim-foreign-tax')">
+                <div class="card-title">
+                    <span class="card-icon">🌐</span>
+                    <div class="card-text">
+                        <h3>外国税額控除計算 <span class="status-badge status-coming">準備中</span></h3>
+                        <p>控除限度額をステップで計算</p>
+                    </div>
+                </div>
+                <span class="arrow">▼</span>
+            </div>
+            <div class="sim-card-body">
+                <div class="coming-soon">
+                    <div class="icon">🚧</div>
+                    <p>近日公開予定<br><small>外国税額控除の限度額・繰越控除をシミュレーション</small></p>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align:center; color:rgba(255,255,255,0.35); font-size:0.75rem; margin-top:24px;">RSU学習ツール</div>
+    </div>
+
+    <!-- External Scripts -->
+
+    <!-- Inline Simulator Logic -->
+    <script>
+        // === Accordion Toggle ===
+        function toggleCard(id) {
+            const card = document.getElementById(id);
+            const isActive = card.classList.contains('active');
+
+            // Close all cards
+            document.querySelectorAll('.sim-card').forEach(c => c.classList.remove('active'));
+
+            // Toggle clicked card
+            if (!isActive) {
+                card.classList.add('active');
+            }
+        }
+
+        // === S1: Vest計算機 ===
+        // 日本の累進課税テーブル (2024年)
+        const TAX_BRACKETS = [
+            { limit: 1950000, rate: 0.05, deduction: 0 },
+            { limit: 3300000, rate: 0.10, deduction: 97500 },
+            { limit: 6950000, rate: 0.20, deduction: 427500 },
+            { limit: 9000000, rate: 0.23, deduction: 636000 },
+            { limit: 18000000, rate: 0.33, deduction: 1536000 },
+            { limit: 40000000, rate: 0.40, deduction: 2796000 },
+            { limit: Infinity, rate: 0.45, deduction: 4796000 }
+        ];
+
+        function calcIncomeTax(taxableIncome) {
+            for (const bracket of TAX_BRACKETS) {
+                if (taxableIncome <= bracket.limit) {
+                    const baseTax = taxableIncome * bracket.rate - bracket.deduction;
+                    // 復興特別所得税 2.1%
+                    return Math.floor(baseTax * 1.021);
+                }
+            }
+            return 0;
+        }
+
+        function getMarginalRate(taxableIncome) {
+            for (const bracket of TAX_BRACKETS) {
+                if (taxableIncome <= bracket.limit) {
+                    return bracket.rate;
+                }
+            }
+            return 0.45;
+        }
+
+        function formatJPY(amount) {
+            return '¥' + Math.floor(amount).toLocaleString('ja-JP');
+        }
+
+        function formatUSD(amount) {
+            return '$' + amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        function calcVest() {
+            const shares = parseFloat(document.getElementById('vest-shares').value);
+            const priceUSD = parseFloat(document.getElementById('vest-price').value);
+            const ttm = parseFloat(document.getElementById('vest-ttm').value);
+            const otherIncomeManYen = parseFloat(document.getElementById('vest-other-income').value) || 0;
+
+            // Validation
+            if (!shares || !priceUSD || !ttm) {
+                alert('株数、株価、TTMレートを入力してください');
+                return;
+            }
+
+            // --- Calculations ---
+            const totalUSD = shares * priceUSD;
+            const totalJPY = totalUSD * ttm;
+            const otherIncome = otherIncomeManYen * 10000;
+
+            // 基礎控除 48万円
+            const basicDeduction = 480000;
+
+            // RSU Vest = 給与所得として合算
+            const totalIncome = otherIncome + totalJPY;
+            const taxableIncome = Math.max(totalIncome - basicDeduction, 0);
+
+            // 所得税（RSU分のみの概算 = 限界税率ベース）
+            const totalTax = calcIncomeTax(taxableIncome);
+            const taxWithoutRSU = calcIncomeTax(Math.max(otherIncome - basicDeduction, 0));
+            const incomeTaxOnRSU = totalTax - taxWithoutRSU;
+
+            // 住民税 10%
+            const residentTax = Math.floor(totalJPY * 0.10);
+
+            // 社会保険料概算（標準報酬月額上限あるため簡易）
+            // RSUは賞与扱い: 健康保険約5% + 厚生年金約9.15% ≒ 14.15% (上限あり)
+            // 簡易的に上限573万円を考慮
+            const socialInsurance = Math.floor(Math.min(totalJPY, 5730000) * 0.1415);
+
+            // 手取り概算
+            const totalDeductions = incomeTaxOnRSU + residentTax;
+            const takeHome = totalJPY - totalDeductions;
+
+            // 限界税率
+            const marginalRate = getMarginalRate(taxableIncome);
+            const effectiveRate = ((incomeTaxOnRSU + residentTax) / totalJPY * 100).toFixed(1);
+
+            // --- Render Results ---
+            const tbody = document.getElementById('vest-result-body');
+            tbody.innerHTML = `
+                <tr>
+                    <td>Vest株数</td>
+                    <td class="amount">${shares.toLocaleString()} 株</td>
+                </tr>
+                <tr>
+                    <td>株価 (USD)</td>
+                    <td class="amount">${formatUSD(priceUSD)}</td>
+                </tr>
+                <tr>
+                    <td>TTMレート</td>
+                    <td class="amount">¥${ttm} / USD</td>
+                </tr>
+                <tr style="border-top: 2px solid #333">
+                    <td><strong>総額 (USD)</strong></td>
+                    <td class="amount"><strong>${formatUSD(totalUSD)}</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>総額 (JPY)</strong></td>
+                    <td class="amount"><strong>${formatJPY(totalJPY)}</strong></td>
+                </tr>
+                <tr><td colspan="2" style="background:#f0f0f0; font-weight:600; font-size:0.85em">📋 税金内訳</td></tr>
+                <tr class="tax-row">
+                    <td>所得税概算 (税率${(marginalRate * 100).toFixed(0)}%帯 + 復興税)</td>
+                    <td class="amount">- ${formatJPY(incomeTaxOnRSU)}</td>
+                </tr>
+                <tr class="tax-row">
+                    <td>住民税概算 (10%)</td>
+                    <td class="amount">- ${formatJPY(residentTax)}</td>
+                </tr>
+                <tr class="tax-row" style="border-top: 1px solid #ddd">
+                    <td><strong>源泉徴収合計（概算）</strong></td>
+                    <td class="amount"><strong>- ${formatJPY(totalDeductions)}</strong></td>
+                </tr>
+                <tr class="highlight">
+                    <td><strong>🎉 手取り概算</strong></td>
+                    <td class="amount"><strong>${formatJPY(takeHome)}</strong></td>
+                </tr>
+                <tr>
+                    <td>実効税率</td>
+                    <td class="amount">${effectiveRate}%</td>
+                </tr>
+            `;
+
+            // Show results
+            document.getElementById('vest-result').classList.add('show');
+
+            // Smooth scroll to results
+            document.getElementById('vest-result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // Enter key support
+        document.querySelectorAll('#sim-vest input').forEach(input => {
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') calcVest();
+            });
+        });
+    </script>
+    <script src="../js/i18n.js"></script>
+</body>
+</html>
+

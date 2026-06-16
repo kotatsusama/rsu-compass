@@ -585,7 +585,6 @@ body { overflow: hidden; background: #000; }
     padding: 12px 14px;
     font-size: 0.85rem;
   }
-  }
 }
 
 /* === スマホ全体最適化 (iPhone等 480px以下) === */
@@ -725,12 +724,150 @@ body { overflow: hidden; background: #000; }
     gap: 6px;
   }
   .vn-result__btn {
-    width: 100%;
     max-width: 240px;
     padding: 10px 16px;
     font-size: 0.75rem;
   }
 }
+
+/* === スマホ横画面 (landscape) 対応 === */
+/* iPhoneを横向きで使う場合、幅は広いが高さが小さい */
+@media (max-height: 500px) and (orientation: landscape) {
+  .vn-character img,
+  .vn-character__img {
+    max-height: 120px;
+  }
+  .vn-character--left { left: 0; }
+  .vn-character--right { right: 0; }
+
+  .vn-textbox {
+    padding: 8px 12px;
+    height: 40%;
+    min-height: 100px;
+    max-height: 160px;
+  }
+  .vn-speaker {
+    font-size: 0.6rem;
+    padding: 2px 6px;
+    margin-bottom: 3px;
+  }
+  .vn-text {
+    font-size: 0.7rem;
+    line-height: 1.4;
+  }
+  .vn-next-indicator {
+    font-size: 0.55rem;
+    right: 8px;
+    bottom: 6px;
+  }
+
+  .vn-info-panel {
+    width: 80%;
+    padding: 12px;
+    max-height: 85vh;
+    border-radius: 8px;
+  }
+  .vn-info-panel__title {
+    font-size: 0.75rem;
+    margin-bottom: 6px;
+    padding-bottom: 6px;
+  }
+  .vn-info-panel__text {
+    font-size: 0.65rem;
+    line-height: 1.5;
+  }
+  .vn-info-panel__btn {
+    padding: 6px 14px;
+    font-size: 0.68rem;
+    margin-top: 10px;
+  }
+
+  .vn-quiz {
+    padding: 10px 10px;
+    max-height: 65vh;
+  }
+  .vn-quiz__question {
+    font-size: 0.7rem;
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+  .vn-quiz__option {
+    padding: 7px 10px;
+    font-size: 0.65rem;
+    border-radius: 5px;
+  }
+  .vn-quiz__feedback {
+    font-size: 0.63rem;
+    padding: 6px 8px;
+  }
+  .vn-quiz__next-btn {
+    padding: 6px 14px;
+    font-size: 0.68rem;
+  }
+
+  .vn-header {
+    top: 2px;
+    left: 6px;
+    right: 6px;
+  }
+  .vn-header__back,
+  .vn-header__score {
+    font-size: 0.55rem;
+    padding: 2px 5px;
+  }
+  .vn-breadcrumb {
+    font-size: 0.5rem;
+  }
+
+  .vn-result-overlay {
+    width: 85%;
+    max-height: 85vh;
+    padding: 10px;
+    border-radius: 8px;
+  }
+  .vn-result__score-area {
+    gap: 10px;
+    padding: 8px;
+    margin-bottom: 10px;
+  }
+  .vn-result__percent {
+    font-size: 1.8rem;
+  }
+  .vn-result__grade-box {
+    width: 40px;
+    height: 40px;
+  }
+  .vn-result__grade {
+    font-size: 1.2rem;
+  }
+  .vn-result__comment {
+    display: none;
+  }
+  .vn-result__panels {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .vn-result__panel {
+    padding: 8px;
+  }
+  .vn-result__panel-title {
+    font-size: 0.6rem;
+    margin-bottom: 6px;
+    padding-bottom: 4px;
+  }
+  .vn-result__item {
+    font-size: 0.58rem;
+  }
+  .vn-result__actions {
+    gap: 6px;
+  }
+  .vn-result__btn {
+    padding: 7px 14px;
+    font-size: 0.65rem;
+  }
+}
+
 
    チャプタートップ画像
    ゲーム開始時に全画面で表示される導入画像。

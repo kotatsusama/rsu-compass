@@ -241,9 +241,25 @@
             .mode-card__icon { font-size: 2rem; }
             .mode-card__title { font-size: 1.1rem; }
         }
-    </style>
+
+        /* iPhone横画面: 高さが小さいのでカードを極小に */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .top-container { padding: 0 10px 6px; }
+            .top-title { font-size: 1.2rem; gap: 6px; margin-bottom: 4px; }
+            .top-title__icon { width: 24px; height: 24px; }
+            .top-title-area { margin-bottom: 6px; }
+            .top-subtitle { font-size: 0.65rem; }
+            .mode-cards { gap: 6px; grid-template-columns: repeat(3, 1fr); }
+            .mode-card { padding: 8px 6px; gap: 2px; }
+            .mode-card__icon { font-size: 1.1rem; margin-bottom: 0; }
+            .mode-card__title { font-size: 0.7rem; }
+            .mode-card__desc { font-size: 0.55rem; }
+            .mode-card__btn { font-size: 0.55rem; padding: 4px 8px; margin-top: 2px; }
+            .top-footer { font-size: 0.5rem; }
+        }
     </style>
 </head>
+<body>
 <body>
     <div class="top-bg"></div>
 

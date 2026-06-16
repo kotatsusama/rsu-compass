@@ -209,49 +209,50 @@
             font-size: 0.7rem;
         }
 
-        /* タブレット・スマホ縦 */
-        @media (max-width: 768px) {
-            .top-container { padding: 0 12px 10px; }
-            .top-title { font-size: 1.4rem; gap: 8px; }
-            .top-title__icon { width: 32px; height: 32px; }
-            .mode-cards { grid-template-columns: 1fr; gap: 6px; }
-            .mode-card { padding: 10px 12px; gap: 4px; flex-direction: row; align-items: center; }
-            .mode-card__icon { font-size: 1.4rem; margin-bottom: 0; }
-            .mode-card__title { font-size: 0.85rem; }
-            .mode-card__desc { display: none; }
-            .mode-card__btn { display: none; }
-            .top-subtitle { font-size: 0.75rem; }
-            .top-title-area { margin-bottom: 8px; }
-        }
-
-        /* iPhone縦画面 (portrait) */
+        /* iPhone縦画面 (portrait): 幅375-440px */
         @media (max-width: 480px) and (orientation: portrait) {
-            .top-container { padding: 0 10px 6px; }
-            .top-title { font-size: 1.2rem; gap: 6px; }
-            .top-title__icon { width: 26px; height: 26px; }
-            .mode-cards { gap: 5px; }
-            .mode-card { padding: 10px 12px; }
-            .mode-card__icon { font-size: 1.2rem; }
-            .mode-card__title { font-size: 0.8rem; }
-            .top-subtitle { font-size: 0.65rem; }
-            .top-title-area { margin-bottom: 6px; }
-            .top-footer { font-size: 0.55rem; }
-        }
-
-        /* iPhone横画面 (landscape) */
-        @media (max-height: 500px) and (orientation: landscape) {
-            .top-container { padding: 0 16px 4px; justify-content: center; }
-            .top-title { font-size: 1.1rem; gap: 6px; margin-bottom: 2px; }
-            .top-title__icon { width: 22px; height: 22px; }
-            .top-title-area { margin-bottom: 4px; }
-            .top-subtitle { font-size: 0.6rem; }
-            .mode-cards { gap: 5px; grid-template-columns: repeat(3, 1fr); }
-            .mode-card { padding: 8px 8px; gap: 3px; }
-            .mode-card__icon { font-size: 1rem; margin-bottom: 0; }
-            .mode-card__title { font-size: 0.65rem; }
+            .top-container { padding: 0 16px 10px; }
+            .top-title { font-size: 1.3rem; gap: 8px; }
+            .top-title__icon { width: 28px; height: 28px; }
+            .top-title-area { margin-bottom: 8px; }
+            .top-subtitle { font-size: 0.75rem; }
+            .mode-cards { grid-template-columns: 1fr; gap: 6px; margin-bottom: 8px; }
+            .mode-card {
+                padding: 12px 14px;
+                gap: 6px;
+                flex-direction: row;
+                align-items: center;
+                border-radius: 10px;
+            }
+            .mode-card__icon { font-size: 1.3rem; margin-bottom: 0; min-width: 28px; }
+            .mode-card__title { font-size: 0.875rem; }  /* 14px Apple推奨 */
             .mode-card__desc { display: none; }
             .mode-card__btn { display: none; }
-            .top-footer { font-size: 0.45rem; }
+            .top-footer { font-size: 0.63rem; }
+            .top-quick-actions { margin-bottom: 6px; }
+            .top-quick-btn { padding: 8px 12px; font-size: 0.75rem; }
+        }
+
+        /* iPhone横画面 (landscape): 高さ375-440px */
+        @media (max-height: 440px) {
+            .top-container { padding: 0 24px 4px; justify-content: center; }
+            .top-title { font-size: 1rem; gap: 5px; margin-bottom: 2px; }
+            .top-title__icon { width: 20px; height: 20px; }
+            .top-title-area { margin-bottom: 3px; }
+            .top-subtitle { display: none; }
+            .mode-cards { gap: 4px; grid-template-columns: repeat(3, 1fr); margin-bottom: 4px; }
+            .mode-card {
+                padding: 8px 8px;
+                gap: 3px;
+                flex-direction: column;
+                align-items: center;
+                border-radius: 8px;
+            }
+            .mode-card__icon { font-size: 1rem; margin-bottom: 0; }
+            .mode-card__title { font-size: 0.69rem; }  /* 11px 最小可読 */
+            .mode-card__desc { display: none; }
+            .mode-card__btn { display: none; }
+            .top-footer { display: none; }
             .top-quick-actions { display: none; }
         }
     </style>
